@@ -1,0 +1,4 @@
+#+title: README
+
+This Git repository contains my solutions to the exercises in Structure and
+Interpretation of Computer Programs (SICP).
