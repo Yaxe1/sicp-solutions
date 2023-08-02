@@ -414,6 +414,7 @@ Now let's try it with normal-order evaluation (by hand).
 (define (divides? a b)
   (= (remainder b a) 0))
 
+; Tests
 (smallest-divisor 199)
 (smallest-divisor 1999)
 (smallest-divisor 19999)
@@ -424,28 +425,488 @@ Now let's try it with normal-order evaluation (by hand).
 : 1999
 : 7
 
-
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.22][Exercise 1.22]]
+
+#+begin_src racket :lang racket  :session  :results output  :exports both
+; From the text
+(define (square x) (* x x))
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+; My solution
+(define (runtime) (* (current-inexact-milliseconds) 1000))
+
+(define (search-for-primes start end limit)
+  (cond [(or (<= limit 0) (> start end)) '()]
+        [(even? start) (search-for-primes (+ start 1) end limit)]
+        [(< start 3) (cons start (search-for-primes (+ start 1) end (- limit 1)))]
+        [(timed-prime-test start) (cons start (search-for-primes (+ start 2) end (- limit 1)))]
+        [else (search-for-primes (+ start 2) end limit)]))
+
+(define (timed-prime-test n)
+  (let [(start-time (runtime))]
+    (if (prime? n)
+        (begin
+          (sleep 1e-3) ; Slow my computer down
+          (display n)
+          (display " -> ")
+          (display (- (runtime) start-time))
+          (display " μs")
+          (newline)
+          #t)
+        #f)))
+
+; Tests
+(search-for-primes 1000 9999 3)
+(search-for-primes 10000 99999 3)
+(search-for-primes 100000 999999 3)
+(search-for-primes 1000000 9999999 3)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+1009 -> 1277.0 μs
+1013 -> 1269.0 μs
+1019 -> 1270.0 μs
+'(1009 1013 1019)
+10007 -> 1270.0 μs
+10009 -> 1271.0 μs
+10037 -> 1268.0 μs
+'(10007 10009 10037)
+100003 -> 1269.0 μs
+100019 -> 1268.0 μs
+100043 -> 1269.0 μs
+'(100003 100019 100043)
+1000003 -> 1275.0 μs
+1000033 -> 1275.0 μs
+1000037 -> 1272.0 μs
+'(1000003 1000033 1000037)
+#+end_example
+
+Oddly, this doesn't follow the =sqrt(n)= scaling that the book says we should
+expect.
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.23][Exercise 1.23]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.24][Exercise 1.24]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.25][Exercise 1.25]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.26][Exercise 1.26]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.27][Exercise 1.27]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%_thm_1.28][Exercise 1.28]]
+
+* Section 1.3 - Formulating Abstractions with Higher-Order Procedures
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.29][Exercise 1.29]]
+
+From [[https://en.wikipedia.org/wiki/Simpson%27s_rule#Composite_Simpson's_1/3_rule][Wikipedia]]:
+
+[[./img/Screenshot 2023-07-30 at 4.44.34 PM.png]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+
+(define (integral-1 f a b dx)
+  (define (add-dx x) (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
+
+(define (sum-int term i n)
+  (if (> i n)
+      0
+      (+ (term i)
+         (sum-int term (+ i 1) n))))
+
+(define (integral-2 f a b n)
+  (let [(h (/ (- b a) n))]
+    (define (x i) (+ a (* i h)))
+    (* 1/3
+       h
+       (sum-int (lambda (i) (+ (f (x (- (* 2 i) 2)))
+                               (* 4 (f (x (- (* 2 i) 1))))
+                               (f (x    (* 2 i)))))
+            1
+            (/ n 2)))))
+
+(define (cube x) (* x x x))
+
+; Tests
+(integral-1 cube 0 1 0.01)
+(integral-1 cube 0 1 0.001)
+(newline)
+(integral-2 cube 0 1 100)
+(integral-2 cube 0 1 1000)
+#+end_src
+
+#+RESULTS:
+: 0.24998750000000042
+: 0.249999875000001
+:
+: 1/4
+: 1/4
+
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.30][Exercise 1.30]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (sum term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ result (term a)))))
+  (iter a 0))
+
+; Tests
+(define (identity x) x)
+(define (inc x) (+ x 1))
+
+(sum identity 0 inc 100)
+(/ (* 100 101) 2) ; n(n+1)/2
+#+end_src
+
+#+RESULTS:
+: 5050
+: 5050
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.31][Exercise 1.31]]
+
+Part a:
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* result (term a)))))
+  (iter a 1))
+
+(define (identity n) n)
+(define (increment n) (+ n 1))
+
+(define (factorial n) (product identity 1 increment n))
+
+(define (even i) (* 2 i))
+(define (odd i) (+ (* 2 i) 1))
+
+(define (square n) (* n n))
+
+(define (pi n)
+  (* 2 (product (lambda (i) (/ (* 4 i i) (- (* 4 i i) 1))) 1 increment n)))
+
+; Tests
+(factorial 1)
+(factorial 5)
+(factorial 30)
+(newline)
+(exact->inexact (pi 1))
+(exact->inexact (pi 10))
+(exact->inexact (pi 100))
+(exact->inexact (pi 1000))
+(exact->inexact (pi 10000))
+#+end_src
+
+#+RESULTS:
+: 1
+: 120
+: 265252859812191058636308480000000
+:
+: 2.6666666666666665
+: 3.067703806643499
+: 3.1337874906281624
+: 3.1408077460303945
+: 3.141514118681922
+
+Part b:
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+         (product term (next a) next b))))
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.32][Exercise 1.32]]
+
+Part a:
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (accumulate combiner null-value term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (combiner (term a) result))))
+  (iter a null-value))
+
+(define (sum term a next b)
+  (accumulate + 0 term a next b))
+
+(define (product term a next b)
+  (accumulate * 1 term a next b))
+#+end_src
+
+Part b:
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+      null-value
+      (combiner (term a) (accumulate combiner null-value term (next a) next b))))
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.33][Exercise 1.33]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (filtered-accumulate combiner null-value term a next b filter)
+  (if (> a b)
+      null-value
+      (if (filter (term a))
+          (combiner (term a) (filtered-accumulate combiner null-value term (next a) next b))
+          (filtered-accumulate combiner null-value term (next a) next b))))
+
+(define (identity x) x)
+
+(define (sum-of-squared-primes a b)
+  (filtered-accumulate + 0 identity a (lambda (n) (if (even? n) (+ n 1) (+ n 2))) b prime?))
+
+; TODO
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.34][Exercise 1.34]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(f f)
+(f 2)
+(2 2) ; not a valid expression, since 2 is not a procedure
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.35][Exercise 1.35]]
+
+At the fixed point, the equation =x = 1 + 1/x= will be true. Rearranging the
+terms, we get =x^2 - x - 1= and use the quadratic formula to solve for x,
+which ends up being =(1 ± sqrt(5))/2=.
+
+Computing this value with =fixed-point=, we get:
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let [(next (f guess))]
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+(fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0)
+#+end_src
+
+#+RESULTS:
+: 1.6180327868852458
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.36][Exercise 1.36]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let [(next (f guess))]
+      (display next)
+      (newline)
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+(define (average x y) (/ (+ x y) 2))
+
+(display "Without average damping")
+(newline)
+(fixed-point (lambda (x) (/ (log 1000) (log x))) 4)
+(newline)
+(display "With average damping")
+(newline)
+(fixed-point (lambda (x) (average x (/ (log 1000) (log x)))) 4)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Without average damping
+4.9828921423310435
+4.301189432497896
+4.734933901055578
+4.442378437719526
+4.632377941509958
+4.505830646780212
+4.588735606875766
+4.533824356566501
+4.56993352418142
+4.546075272637246
+4.561789745175654
+4.55141783665413
+4.5582542120702625
+4.553744140202578
+4.556717747893265
+4.554756404545319
+4.5560497413912975
+4.5551967522618035
+4.555759257615811
+4.555388284933278
+4.555632929754932
+4.555471588998784
+4.555577989320218
+4.555507819903776
+4.555554095154945
+4.555523577416557
+4.555543703263474
+4.555530430629037
+4.555539183677709
+4.555539183677709
+
+With average damping
+4.491446071165521
+4.544974650975552
+4.553746974742814
+4.555231425802502
+4.555483906560562
+4.5555268862194875
+4.5555342036887705
+4.5555342036887705
+#+end_example
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.37][Exercise 1.37]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.38][Exercise 1.38]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.39][Exercise 1.39]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.40][Exercise 1.40]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+; From the text
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+
+(define (deriv g)
+  (define dx 0.00001)
+  (lambda (x)
+    (/ (- (g (+ x dx)) (g x))
+       dx)))
+
+(define (fixed-point f first-guess)
+  (define tolerance 0.00001)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let [(next (f guess))]
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+(define (cubic a b c)
+  (lambda (x)
+    (+ (* x x x) (* a x x) (* b x) c)))
+
+(newtons-method (cubic 1 2 3) 1)
+#+end_src
+
+#+RESULTS:
+: -1.2756822036498454
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.41][Exercise 1.41]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (double f)
+  (lambda (x) (f (f x))))
+
+(((double (double double)) inc) 5)
+#+end_src
+
+#+RESULTS:
+: 21
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.42][Exercise 1.42]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (compose f g)
+  (lambda (x) (f (g x))))
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.43][Exercise 1.43]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (compose f (repeated f (- n 1)))))
+
+(define (square x) (* x x))
+((repeated square 2) 5)
+#+end_src
+
+#+RESULTS:
+: 625
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.44][Exercise 1.44]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+
+(define (average . args) ; using variadic arguments so I don't have to rewrite
+  (define (iter args sum count)
+    (if (null? args)
+        (if (= count 0)
+            0
+            (/ sum count))
+        (iter (cdr args) (+ sum (car args)) (+ count 1))))
+  (iter args 0 0))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (compose f (repeated f (- n 1)))))
+
+(define (smooth f)
+  (define dx 0.00001)
+  (lambda (x) (average (f (- x dx)) (f x) (f (+ x dx)))))
+
+(define (n-fold-smooth f n)
+  (repeated smooth n))
+#+end_src
+
+#+RESULTS:
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.45][Exercise 1.45]]
+
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-12.html#%_thm_1.46][Exercise 1.46]]
