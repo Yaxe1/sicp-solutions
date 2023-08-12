@@ -1,7 +1,7 @@
 #+title: Chapter 2 - Building Abstractions with Data
 
 * Section 2.1 - Introduction to Data Abstractions
-** Exercise 2.1
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.1][Exercise 2.1]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 ; From the text
@@ -26,7 +26,7 @@
 : (5 . 4)
 : (-1 . 2)
 
-** Exercise 2.2
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.2][Exercise 2.2]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 (define (make-point x y) (cons x y))
@@ -58,7 +58,7 @@
 :
 : (1, 1)
 
-** Exercise 2.3
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.3][Exercise 2.3]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 (define (rect w h) ; two corners
@@ -99,7 +99,7 @@ Alternative representation using points
   (+ (* 2 (width r)) (* 2 (height r))))
 #+end_src
 
-** Exercise 2.4
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.4][Exercise 2.4]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 ; From the text
@@ -114,7 +114,7 @@ Alternative representation using points
   (z (lambda (p q) q)))
 #+end_src
 
-** Exercise 2.5
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.5][Exercise 2.5]]
 
 Note that 2 and 3 are coprime, thus for each a and b there exists some unique value of 2^a * 3^b
 
@@ -124,6 +124,7 @@ Note that 2 and 3 are coprime, thus for each a and b there exists some unique va
 #+end_src
 
 ** Exercise 2.6
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.6][Exercise 2.6]]
 
 Substituting the definition of =zero= into =add-1=, we get
 #+begin_src racket :lang sicp  :session  :results output  :exports both
@@ -137,6 +138,7 @@ Substituting the definition of =zero= into =add-1=, we get
 
 TODO addition
 
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.7][Exercise 2.7]]
 ** Exercise 2.7
 
 Choosing to employ =min= and =max= instead of relying on the ordering
@@ -148,14 +150,15 @@ Choosing to employ =min= and =max= instead of relying on the ordering
 (define (upper-bound i) (max (car i) (cdr i)))
 #+end_src
 
-** Exercise 2.8
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.8][Exercise 2.8]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (lower-bound y))
                  (- (upper-bound x) (upper-bound y))))
 #+end_src
-** Exercise 2.9
+
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.9][Exercise 2.9]]
 
 Consider intervals =a= and =b=. The width of their sum =(add-interval a b)= is
 #+begin_src racket :lang sicp
@@ -176,11 +179,12 @@ Rearranging the terms, we get
 
 TODO examples for multiplication
 
-** Exercise 2.10
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.10][Exercise 2.10]]
 
-** Exercise 2.11
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.11][Exercise 2.11]]
 
-** Exercise 2.12
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.12][Exercise 2.12]]
+
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 (define (make-center-percent center percent) (cons center percent))
 
@@ -188,17 +192,17 @@ TODO examples for multiplication
 (define (percent x) (cdr x))
 #+end_src
 
-** Exercise 2.13
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.13][Exercise 2.13]]
 
-** Exercise 2.14
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.14][Exercise 2.14]]
 
-** Exercise 2.15
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.15][Exercise 2.15]]
 
-** Exercise 2.16
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.16][Exercise 2.16]]
 
 * Section 2.2 - Hierarchical Data and the Closure Property
 
-** Exercise 2.17
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.17][Exercise 2.17]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 (define (last-pair l)
@@ -213,7 +217,86 @@ TODO examples for multiplication
 #+RESULTS:
 : (34)
 
-** Exercise 2.18
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.18][Exercise 2.18]]
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 #+end_src
+
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.19][Exercise 2.19]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.20][Exercise 2.20]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.21][Exercise 2.21]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.22][Exercise 2.22]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.23][Exercise 2.23]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.24][Exercise 2.24]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.25][Exercise 2.25]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.26][Exercise 2.26]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.27][Exercise 2.27]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.28][Exercise 2.28]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.29][Exercise 2.29]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.30][Exercise 2.30]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.31][Exercise 2.31]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.32][Exercise 2.32]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.33][Exercise 2.33]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.34][Exercise 2.34]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.35][Exercise 2.35]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.36][Exercise 2.36]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.37][Exercise 2.37]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.38][Exercise 2.38]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.39][Exercise 2.39]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.40][Exercise 2.40]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.41][Exercise 2.41]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.42][Exercise 2.42]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.43][Exercise 2.43]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.44][Exercise 2.44]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.45][Exercise 2.45]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.46][Exercise 2.46]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.47][Exercise 2.47]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.48][Exercise 2.48]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.49][Exercise 2.49]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.50][Exercise 2.50]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.51][Exercise 2.51]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.52][Exercise 2.52]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.53][Exercise 2.53]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.54][Exercise 2.54]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.55][Exercise 2.55]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.56][Exercise 2.56]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.57][Exercise 2.57]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.58][Exercise 2.58]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.59][Exercise 2.59]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.60][Exercise 2.60]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.61][Exercise 2.61]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.62][Exercise 2.62]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.63][Exercise 2.63]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.64][Exercise 2.64]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.65][Exercise 2.65]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.66][Exercise 2.66]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.67][Exercise 2.67]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.68][Exercise 2.68]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.69][Exercise 2.69]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.70][Exercise 2.70]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.71][Exercise 2.71]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.72][Exercise 2.72]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.73][Exercise 2.73]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.74][Exercise 2.74]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.75][Exercise 2.75]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.76][Exercise 2.76]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.77][Exercise 2.77]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.78][Exercise 2.78]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.79][Exercise 2.79]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.80][Exercise 2.80]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.81][Exercise 2.81]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.82][Exercise 2.82]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.83][Exercise 2.83]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.84][Exercise 2.84]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.85][Exercise 2.85]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.86][Exercise 2.86]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.87][Exercise 2.87]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.88][Exercise 2.88]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.89][Exercise 2.89]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.90][Exercise 2.90]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.91][Exercise 2.91]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.92][Exercise 2.92]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.93][Exercise 2.93]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.94][Exercise 2.94]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.95][Exercise 2.95]]
+** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.96][Exercise 2.96]]
