@@ -379,19 +379,304 @@ I don't know how to get rid of the nil value in the output.
 
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.24][Exercise 2.24]]
 
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(list 1 (list 2 (list 3 4)))
+#+end_src
 
+#+RESULTS:
+: (1 (2 (3 4)))
+
+Not drawing the box and pointer structure.
+
+#+begin_src
+1
+ \
+  2
+ / \
+3   4
+#+end_src
 
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.25][Exercise 2.25]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define a '(1 3 (5 7) 9))
+(define b '((7)))
+(define c '(1 (2 (3 (4 (5 (6 7)))))))
+
+(car (cdr (car (cdr (cdr a)))))
+(car (car b))
+(car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr c))))))))))))
+#+end_src
+
+#+RESULTS:
+: 7
+: 7
+: 7
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.26][Exercise 2.26]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define x (list 1 2 3))
+(define y (list 4 5 6))
+
+(append x y)
+(cons x y)
+(list x y)
+#+end_src
+
+#+RESULTS:
+: (1 2 3 4 5 6)
+: ((1 2 3) 4 5 6)
+: ((1 2 3) (4 5 6))
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.27][Exercise 2.27]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (deep-reverse items)
+  (define (reverse-iter items reversed)
+    (if (null? items)
+        reversed
+        (reverse-iter
+         (cdr items)
+         (cons (if [list? (car items)]
+                   (deep-reverse (car items))
+                   (car items))
+               reversed))))
+  (reverse-iter items '()))
+
+(deep-reverse '((1 2) (3 4)))
+#+end_src
+
+#+RESULTS:
+: ((4 3) (2 1))
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.28][Exercise 2.28]]
+
+| Subtree       | Leaves  |
+|---------------+---------|
+| ((1 2) (3 4)) | nil     |
+| (1 2)         | nil     |
+| 1             | (1)     |
+| 2             | (1 2)   |
+| (3 4)         | (1 2)   |
+| 3             | (1 2 3) |
+| 4             | (1 2 3 4) |
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (fringe tree)
+  (cond [(not (pair? tree)) tree]
+        [(not (pair? (car tree))) (cons (car tree) (fringe (cdr tree)))]
+        [else (append (fringe (car tree)) (fringe (cdr tree)))]))
+
+(define x (list (list 1 2) (list 3 4)))
+(fringe x)
+(fringe (list x x))
+#+end_src
+
+#+RESULTS:
+: (1 2 3 4)
+: (1 2 3 4 1 2 3 4)
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.29][Exercise 2.29]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (make-mobile left right)
+  (list left right))
+
+(define (make-branch length structure)
+  (list length structure))
+
+; Part A
+(define (left-branch mobile)
+  (car mobile))
+
+(define (right-branch mobile)
+  (car (cdr mobile)))
+
+(define (branch-length branch)
+  (car branch))
+
+(define (branch-structure branch)
+  (car (cdr branch)))
+
+; Part B
+
+(define (total-weight mobile)
+  (define (branch-weight branch)
+    (cond [(number? (branch-structure branch)) (branch-structure branch)]
+          [else (total-weight (branch-structure branch))]))
+  (+ (branch-weight (left-branch mobile))
+     (branch-weight (right-branch mobile))))
+
+; Part C
+(define (torque branch distance)
+  (cond [(null? branch)
+         nil]
+        [(number? (branch-structure branch))
+         (* (branch-structure branch) distance)]
+        [else
+         (let ([left (left-branch (branch-structure branch))]
+               [right (right-branch (branch-structure branch))])
+           (- (torque left (- distance (branch-length left)))
+              (torque right (+ distance (branch-length right)))))]))
+
+(define (mobile-balanced? mobile)
+  (= (torque (left-branch mobile) (- (branch-length (left-branch mobile))))
+     (torque (right-branch mobile) (branch-length (right-branch mobile)))))
+; Tests
+(total-weight (make-mobile (make-branch 1 2) (make-branch 3 4)))
+(total-weight (make-mobile (make-branch 1 (make-mobile (make-branch 1 2) (make-branch 3 4))) (make-branch 5 6)))
+
+(define x0 (make-branch 0 1))
+(define x1 (make-branch 1 1))
+(define x2 (make-branch 1 (make-mobile (make-branch 1 1)
+                                       (make-branch 1 1))))
+
+(torque x0 0)
+(torque x1 1)
+(torque x2 1)
+
+(mobile-balanced? (make-mobile x0 x0))
+(mobile-balanced? (make-mobile x0 x1))
+#+end_src
+
+#+RESULTS:
+: 6
+: 12
+: 0
+: 1
+: -2
+: #t
+: #f
+
+For part D, I would just have to reimplement the selector procedures.
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.30][Exercise 2.30]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (square x) (* x x))
+
+(define (square-tree tree)
+  (map (lambda (sub-tree)
+         (if [pair? sub-tree]
+             (square-tree sub-tree)
+             (square sub-tree)))
+       tree))
+
+; Tests
+(square-tree
+ (list 1
+       (list 2 (list 3 4) 5)
+       (list 6 7)))
+#+end_src
+
+#+RESULTS:
+: (1 (4 (9 16) 25) (36 49))
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.31][Exercise 2.31]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (tree-map procedure tree)
+  (map (lambda (sub-tree)
+         (if [pair? sub-tree]
+             (tree-map procedure sub-tree)
+             (procedure sub-tree)))
+       tree))
+
+(define (square x) (* x x))
+(define (square-tree tree) (tree-map square tree))
+
+; Tests
+(square-tree
+ (list 1
+       (list 2 (list 3 4) 5)
+       (list 6 7)))
+#+end_src
+
+#+RESULTS:
+: (1 (4 (9 16) 25) (36 49))
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.32][Exercise 2.32]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+(define (subsets s)
+  (if (null? s)
+      (list nil)
+      (let ((rest (subsets (cdr s))))
+        (append rest (map )))))
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.33][Exercise 2.33]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+; From the text
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+
+(define (map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+
+(define (append seq1 seq2)
+  (accumulate cons seq2 seq1))
+
+(define (length sequence)
+  (accumulate (lambda (x y) (+ y 1)) 0 sequence))
+
+; Tests
+(map (lambda (x) (* x x)) (list 1 2 3))
+(append (list 1 2 3) (list 4 5 6))
+(length (list 1 2 3 4 5))
+#+end_src
+
+#+RESULTS:
+: (1 4 9)
+: (1 2 3 4 5 6)
+: 5
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.34][Exercise 2.34]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+; From the text
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+
+(define (horner-eval x coefficient-sequence)
+  (accumulate (lambda (this-coeff higher-terms) (+ this-coeff (* higher-terms x)))
+              0
+              coefficient-sequence))
+
+(horner-eval 2 (list 1 3 0 5 0 1))
+#+end_src
+
+#+RESULTS:
+: 79
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.35][Exercise 2.35]]
+
+#+begin_src racket :lang sicp  :session  :results output  :exports both
+; From the text
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+
+(define (count-leaves t)
+  (accumulate +
+              0
+              (map (lambda (node)
+                     (if (pair? node)
+                         (count-leaves node)
+                         1))
+                   t)))
+#+end_src
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.36][Exercise 2.36]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.37][Exercise 2.37]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.38][Exercise 2.38]]
