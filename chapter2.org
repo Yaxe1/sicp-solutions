@@ -1,5 +1,19 @@
 #+title: Chapter 2 - Building Abstractions with Data
 
+* Utility functions
+
+#+begin_src scheme :session chapter2
+(define (displayln object)
+  (display object)
+  (newline))
+
+(define (displayln-all . objects)
+  (for-each displayln objects))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
 * Section 2.1 - Introduction to Data Abstractions
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.1][Exercise 2.1]]
 
@@ -452,15 +466,15 @@ Not drawing the box and pointer structure.
 
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.28][Exercise 2.28]]
 
-| Subtree       | Leaves  |
-|---------------+---------|
-| ((1 2) (3 4)) | nil     |
-| (1 2)         | nil     |
-| 1             | (1)     |
-| 2             | (1 2)   |
-| (3 4)         | (1 2)   |
-| 3             | (1 2 3) |
-| 4             | (1 2 3 4) |
+|       Subtree | Leaves    |
+|---------------+-----------|
+| ((1 2) (3 4)) | nil       |
+|         (1 2) | nil       |
+|             1 | (1)       |
+|             2 | (1 2)     |
+|         (3 4) | (1 2)     |
+|             3 | (1 2 3)   |
+|             4 | (1 2 3 4) |
 
 #+begin_src racket :lang sicp  :session  :results output  :exports both
 (define (fringe tree)
@@ -608,7 +622,7 @@ For part D, I would just have to reimplement the selector procedures.
 
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.33][Exercise 2.33]]
 
-#+begin_src racket :lang sicp  :session  :results output  :exports both
+#+begin_src scheme :session chapter2 :results output
 ; From the text
 (define (accumulate op initial sequence)
   (if (null? sequence)
@@ -617,7 +631,7 @@ For part D, I would just have to reimplement the selector procedures.
           (accumulate op initial (cdr sequence)))))
 
 (define (map p sequence)
-  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+  (accumulate (lambda (x y) (cons (p x) y)) '() sequence))
 
 (define (append seq1 seq2)
   (accumulate cons seq2 seq1))
@@ -626,9 +640,15 @@ For part D, I would just have to reimplement the selector procedures.
   (accumulate (lambda (x y) (+ y 1)) 0 sequence))
 
 ; Tests
-(map (lambda (x) (* x x)) (list 1 2 3))
-(append (list 1 2 3) (list 4 5 6))
-(length (list 1 2 3 4 5))
+(displayln-all
+ (map (lambda (x) (* x x)) (list 1 2 3))
+ (append (list 1 2 3) (list 4 5 6))
+ (length (list 1 2 3 4 5)))
+
+; Rebind old procedure definitions
+(set! map (module-ref (resolve-module '(scheme base)) 'map))
+(set! append (module-ref (resolve-module '(scheme base)) 'append))
+(set! length (module-ref (resolve-module '(scheme base)) 'length))
 #+end_src
 
 #+RESULTS:
@@ -638,20 +658,14 @@ For part D, I would just have to reimplement the selector procedures.
 
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.34][Exercise 2.34]]
 
-#+begin_src racket :lang sicp  :session  :results output  :exports both
-; From the text
-(define (accumulate op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (car sequence)
-          (accumulate op initial (cdr sequence)))))
-
+#+begin_src scheme :session chapter2 :results output
 (define (horner-eval x coefficient-sequence)
   (accumulate (lambda (this-coeff higher-terms) (+ this-coeff (* higher-terms x)))
               0
               coefficient-sequence))
 
-(horner-eval 2 (list 1 3 0 5 0 1))
+(displayln-all
+ (horner-eval 2 (list 1 3 0 5 0 1)))
 #+end_src
 
 #+RESULTS:
@@ -659,14 +673,7 @@ For part D, I would just have to reimplement the selector procedures.
 
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.35][Exercise 2.35]]
 
-#+begin_src racket :lang sicp  :session  :results output  :exports both
-; From the text
-(define (accumulate op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (car sequence)
-          (accumulate op initial (cdr sequence)))))
-
+#+begin_src scheme :session chapter2 :results output
 (define (count-leaves t)
   (accumulate +
               0
@@ -677,10 +684,102 @@ For part D, I would just have to reimplement the selector procedures.
                    t)))
 #+end_src
 
+#+RESULTS:
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.36][Exercise 2.36]]
+
+This reminds me of Python's [[https://docs.python.org/3/library/functions.html#zip][zip()]] builtin
+
+#+begin_src scheme :session chapter2 :results output
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      '()
+      (cons (accumulate op init (map car seqs))
+            (accumulate-n op init (map cdr seqs)))))
+
+; Tests
+(define s '((1 2 3) (4 5 6) (7 8 9) (10 11 12)))
+
+(displayln-all
+ (accumulate-n + 0 s))
+#+end_src
+
+#+RESULTS:
+: (22 26 30)
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.37][Exercise 2.37]]
+
+#+begin_src scheme :session chapter2 :results output
+(define (dot-product v w)
+  (accumulate + 0 (map * v w)))
+
+(define (matrix-*-vector m v)
+  (map (lambda (row) (dot-product row v)) m))
+
+(define (transpose mat)
+  (accumulate-n cons '() mat))
+
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+    (map (lambda (row)
+           (map (lambda (col)
+                  (dot-product row col))
+                cols))
+         m)))
+
+; Tests
+(displayln-all
+ (dot-product '(1 2 3) '(4 5 6))
+ (matrix-*-vector '((1 2 3)
+                    (4 5 6)
+                    (7 8 9))
+                  '(1 2 3))
+ (transpose '((1 2 3)
+              (4 5 6)
+              (7 8 9)))
+ (matrix-*-matrix '((2 0 0)
+                    (0 2 0)
+                    (0 0 2))
+                  '((1 2 3)
+                    (4 5 6)
+                    (7 8 9)))
+)
+#+end_src
+
+#+RESULTS:
+: 32
+: (14 32 50)
+: ((1 4 7) (2 5 8) (3 6 9))
+: ((2 4 6) (8 10 12) (14 16 18))
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.38][Exercise 2.38]]
+
+#+begin_src scheme :session chapter2 :results output
+(use-modules (srfi srfi-1))
+(displayln-all
+ (fold-right / 1 (list 1 2 3))
+ (fold / 1 (list 1 2 3))
+ (fold-right list '() (list 1 2 3))
+ (fold list '() (list 1 2 3))
+)
+#+end_src
+
+#+RESULTS:
+: 3/2
+: 3/2
+: (1 (2 (3 ())))
+: (3 (2 (1 ())))
+
+What property should =op= have? TODO revisit this
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.39][Exercise 2.39]]
+
+#+begin_src scheme :results output
+(use-modules (srfi srfi-1))
+#+end_src
+
+#+RESULTS:
+
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.40][Exercise 2.40]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.41][Exercise 2.41]]
 ** [[https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%_thm_2.42][Exercise 2.42]]
